@@ -1,44 +1,39 @@
-let currentMode = 'fast';
+const LMCH_CELLS_URL = "https://script.google.com/macros/s/AKfycbwxVlmcywub5xt-XpaUjYKRZEriMgQDsSBJgYbTw4aimCqvjStdNGUSwzXtTQvEM5iJCw/exec";
 
-function setMode(mode, btn) {
-    currentMode = mode;
-    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    // Меняем цвет под режим
-    const color = (mode === 'ultra') ? "#bc13fe" : "#00f2ff";
-    document.documentElement.style.setProperty('--accent', color);
-}
-
-function handleEnter(e) { if (e.key === 'Enter') ask(); }
-
-function ask() {
+async function ask() {
     const input = document.getElementById('ai-q');
     const chat = document.getElementById('chat');
     const text = input.value.trim();
     if (!text) return;
 
+    // 1. Отображаем сообщение пользователя
     chat.innerHTML += `<div class="bubble user">${text}</div>`;
     input.value = "";
 
-    // Эффект "Думающего" режима
-    let delay = (currentMode === 'ultra') ? 2000 : 500;
-    
-    setTimeout(() => {
-        let reply = "Анализ завершен. Данные в логах не найдены.";
-        
-        if(text.toLowerCase().includes("привет")) reply = "Привет, Посейдон! Система активна.";
-        if(text.toLowerCase().includes("3.2")) reply = "Вижу пакет 3.2. 12-й мир стабилен. Хотите пересказ?";
-        
-        if (currentMode === 'ultra') {
-            reply = "🔮 [DEEP ANALYSIS]: " + reply + " (Обнаружены скрытые слои 12-й Империи)";
-        }
+    // 2. ОТПРАВЛЯЕМ В ЛМСХ-КЛЕТКИ (Магия!)
+    sendToCells("Sasha_Admin", "Main_Chat", text);
 
+    // 3. Логика ответа Оракула
+    setTimeout(() => {
+        let reply = "Данные получены и зашифрованы в Клетках 3.2.";
+        if(text.toLowerCase().includes("привет")) reply = "Привет, Посейдон! Вижу тебя в системе.";
+        
         chat.innerHTML += `<div class="bubble ai">${reply}</div>`;
         chat.scrollTop = chat.scrollHeight;
-    }, delay);
+    }, 600);
 }
 
-function takeSnapshot() {
-    alert("Оракул: Делаю скриншот реальности... (Функция в разработке)");
+async function sendToCells(userId, chatId, message) {
+    try {
+        await fetch(LMCH_CELLS_URL, {
+            method: 'POST',
+            mode: 'no-cors', 
+            body: JSON.stringify({
+                type: "CHAT",
+                userId: userId,
+                chatId: chatId,
+                message: message
+            })
+        });
+    } catch (e) { console.log("Ошибка связи с Клетками"); }
 }
