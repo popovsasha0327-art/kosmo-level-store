@@ -2,8 +2,8 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyp1JFtNyqiy2-O4MSn0
 
 window.onload = () => {
     let user = localStorage.getItem('titan_name');
-    if (!user) { user = prompt("Имя Титана:"); if (user) localStorage.setItem('titan_name', user); }
-    if (user) { setTimeout(() => { document.getElementById('welcome-msg').innerHTML = `Привет, <b>${user}</b>! Системы ЛМСХ в норме.`; }, 500); }
+    if (!user) { user = prompt("Введите имя:"); if (user) localStorage.setItem('titan_name', user); }
+    if (user) { setTimeout(() => { document.getElementById('welcome-msg').innerHTML = `Привет, <b>${user}</b>! Системы Титана активны.`; }, 500); }
 };
 
 function toggleOracle() { document.getElementById('oracle-window').classList.toggle('active'); }
@@ -12,6 +12,7 @@ async function ask() {
     const input = document.getElementById('ai-q');
     const text = input.value.trim();
     if (!text) return;
+
     const chat = document.getElementById('chat');
     const isUltra = document.querySelector('.ultra').classList.contains('active');
     
@@ -20,10 +21,10 @@ async function ask() {
     chat.scrollTop = chat.scrollHeight;
 
     if (isUltra) {
-        const loadingId = "load-" + Date.now();
-        chat.innerHTML += `<div class="bubble ai" id="${loadingId}"><i>Анализирую глубокие слои ЛМСХ...</i></div>`;
+        const loadId = "l-" + Date.now();
+        chat.innerHTML += `<div class="bubble ai" id="${loadId}"><i>Глубокий анализ ЛМСХ...</i></div>`;
         chat.scrollTop = chat.scrollHeight;
-        setTimeout(() => { document.getElementById(loadingId).innerHTML = "Глубокий анализ завершен. Данные синхронизированы."; chat.scrollTop = chat.scrollHeight; }, 2000);
+        setTimeout(() => { document.getElementById(loadId).innerHTML = "Анализ завершен. Данные синхронизированы в Клетках."; chat.scrollTop = chat.scrollHeight; }, 2000);
     } else {
         setTimeout(() => { chat.innerHTML += `<div class="bubble ai">Принято!</div>`; chat.scrollTop = chat.scrollHeight; }, 600);
     }
@@ -36,11 +37,22 @@ function setMode(mode, el) {
     el.classList.add('active');
 }
 
+// ПЕРЕТАСКИВАНИЕ
 const card = document.getElementById('oracle-window');
 const handle = document.getElementById('drag-handle');
-let isMoving = false, startX, startY;
+let isDrag = false, sx, sy;
 
-handle.onmousedown = (e) => { if (e.target.classList.contains('close-btn')) return; isMoving = true; startX = e.clientX - card.offsetLeft; startY = e.clientY - card.offsetTop; card.style.transition = 'none'; };
-document.onmousemove = (e) => { if (!isMoving) return; card.style.left = (e.clientX - startX) + 'px'; card.style.top = (e.clientY - startY) + 'px'; card.style.bottom = 'auto'; card.style.right = 'auto'; };
-document.onmouseup = () => { isMoving = false; card.style.transition = 'opacity 0.5s ease, transform 0.5s ease'; };
+handle.onmousedown = (e) => { 
+    if (e.target.classList.contains('close-btn')) return;
+    isDrag = true; sx = e.clientX - card.offsetLeft; sy = e.clientY - card.offsetTop;
+    card.style.transition = 'none'; 
+};
+document.onmousemove = (e) => { 
+    if (!isDrag) return;
+    card.style.left = (e.clientX - sx) + 'px'; card.style.top = (e.clientY - sy) + 'px';
+    card.style.bottom = 'auto'; card.style.right = 'auto';
+};
+document.onmouseup = () => { isDrag = false; card.style.transition = 'opacity 0.5s, transform 0.5s'; };
+
 document.getElementById('ai-q').addEventListener('keypress', (e) => { if (e.key === 'Enter') ask(); });
+function attachFile() { alert("Скрепка активна. Выберите файл для Титана."); }
