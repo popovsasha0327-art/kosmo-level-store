@@ -1,58 +1,72 @@
-/* ВОССТАНОВЛЕНИЕ ТИТАНА 3.5.8 */
-html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    background-color: #000 !important; /* Черный фон сразу */
-    color: #fff !important;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
+/* [БРОНЯ ТИТАНА 3.5.9] */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+body { background: #000 !important; color: #fff; height: 100vh; overflow: hidden; }
 
 /* ВЕРХНЯЯ ПАНЕЛЬ */
 .top-nav {
     position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-    background: rgba(10, 10, 12, 0.95); backdrop-filter: blur(10px);
+    background: rgba(0,0,0,0.9); border-bottom: 1px solid #00f2ff33;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 40px; border-bottom: 1px solid rgba(0, 242, 255, 0.3); z-index: 9999;
+    padding: 0 30px; z-index: 5000;
 }
-.logo { color: #00f2ff; font-weight: 900; letter-spacing: 2px; font-family: sans-serif; }
-.nav-links a { color: #888; text-decoration: none; margin-left: 25px; font-size: 12px; font-weight: bold; font-family: sans-serif; }
-.nav-links a.active { color: #00f2ff; text-shadow: 0 0 10px #00f2ff; }
+.logo { color: #00f2ff; font-weight: 900; letter-spacing: 2px; }
+.nav-links a { color: #888; text-decoration: none; margin-left: 20px; font-size: 12px; font-weight: bold; }
+.nav-links a.active { color: #00f2ff; }
 
-/* КОНТЕНТ ПО ЦЕНТРУ */
-.content { padding-top: 150px; text-align: center; font-family: sans-serif; }
-.content h1 { font-size: 48px; color: #00f2ff; text-shadow: 0 0 20px rgba(0,242,255,0.5); }
-
-/* ОКНО ЧАТА (КАК НА ВАШЕМ СКРИНШОТЕ) */
+/* ОКНО ЧАТА - ФИКС ДИЗАЙНА И ПЕРЕМЕЩЕНИЯ */
 .card {
     position: fixed; bottom: 100px; right: 30px;
     width: 380px; height: 550px; background: #0a0a0c;
-    border: 1px solid rgba(0, 242, 255, 0.3); border-radius: 35px;
+    border: 1px solid #00f2ff4d; border-radius: 35px;
     display: flex; flex-direction: column; padding: 20px;
-    z-index: 9000; opacity: 0; transform: translateY(20px);
-    transition: 0.4s ease; pointer-events: none;
+    z-index: 9000; opacity: 0; transform: translateY(30px);
+    transition: opacity 0.4s, transform 0.4s;
+    pointer-events: none; backdrop-filter: blur(20px);
+    resize: both; overflow: hidden; /* Масштабирование */
 }
 .card.active { opacity: 1 !important; transform: translateY(0) !important; pointer-events: all !important; }
 
-/* ПУЗЫРИ СООБЩЕНИЙ */
-#chat { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 12px; }
-.bubble { padding: 12px 18px; border-radius: 20px; font-size: 14px; max-width: 85%; font-family: sans-serif; }
+/* ШАПКА ОКНА ДЛЯ ПЕРЕТАСКИВАНИЯ */
+.top-bar { cursor: move; padding-bottom: 10px; border-bottom: 1px solid #ffffff1a; margin-bottom: 10px; }
+
+/* СООБЩЕНИЯ (ФИКС ВИДИМОСТИ) */
+#chat { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+.bubble { padding: 12px 16px; border-radius: 20px; font-size: 14px; max-width: 85%; line-height: 1.4; }
+.ai { align-self: flex-start; background: #262629; color: #fff; border-bottom-left-radius: 4px; }
 .user { align-self: flex-end; background: #007aff; color: #fff; border-bottom-right-radius: 4px; }
-.ai { align-self: flex-start; background: #262629; color: #fff; border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
 
-/* ВВОД */
-.input-area { 
-    display: flex; background: rgba(255,255,255,0.05); padding: 5px 15px; 
-    border-radius: 25px; border: 1px solid #333; margin-top: 15px; 
-}
-input { all: unset !important; flex: 1; padding: 10px; color: #fff !important; font-size: 14px; }
-.send-btn { background: #00f2ff; width: 35px; height: 35px; border-radius: 50%; color: #000; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+/* ВВОД (ФИКС ПОДВАЛА) */
+.input-container { margin-top: auto; }
+.input-area { display: flex; background: #ffffff0d; padding: 8px 15px; border-radius: 25px; border: 1px solid #333; }
+input { all: unset; flex: 1; color: #fff; font-size: 14px; padding: 5px; }
+.modes-shelf { display: flex; gap: 5px; margin-top: 8px; }
+.mode-tag { flex: 1; background: #1c1c1e; color: #555; font-size: 9px; padding: 6px; border-radius: 8px; text-align: center; cursor: pointer; }
+.mode-tag.active { background: #00f2ff; color: #000; font-weight: bold; }
 
-/* КНОПКА-ТРИГГЕР */
+/* КНОПКА-ТРИГГЕР С ПОДСКАЗКОЙ */
 #ai-trigger {
     position: fixed; bottom: 30px; right: 30px; width: 100px; height: 55px; 
     background: #000; border-radius: 30px; border: 2px solid #00f2ff;
     display: flex; align-items: center; justify-content: center; gap: 15px; z-index: 10000; cursor: pointer;
 }
-.dot { color: #fff; font-size: 24px; text-shadow: 0 0 10px #00f2ff; }
+#ai-trigger::before {
+    content: "Спросить Оракула"; position: absolute; top: -45px; right: 0;
+    background: #00f2ff; color: #000; padding: 5px 12px; border-radius: 10px;
+    font-size: 11px; font-weight: bold; opacity: 0; transition: 0.3s; pointer-events: none;
+    white-space: nowrap; animation: hintFloat 3s infinite ease-in-out;
+}
+#ai-trigger:hover::before { opacity: 1; }
+
+/* KEYFRAMES - АНИМАЦИЯ ТОЧЕК И ПОДСКАЗКИ */
+.dot { font-size: 24px; color: #fff; animation: dotPulse 1.5s infinite ease-in-out; }
+.right-dot { animation-delay: 0.75s; }
+
+@keyframes dotPulse {
+    0%, 100% { transform: scale(1); text-shadow: 0 0 5px #00f2ff; opacity: 0.5; }
+    50% { transform: scale(1.3); text-shadow: 0 0 20px #00f2ff; opacity: 1; }
+}
+
+@keyframes hintFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
