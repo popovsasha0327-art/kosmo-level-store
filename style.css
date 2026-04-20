@@ -1,63 +1,142 @@
+/* [ПЕРЕМЕННЫЕ ПРЕСТИЖА] */
 :root {
     --accent: #00f2ff;
     --card-bg: rgba(10, 10, 12, 0.98);
     --user-blue: #007aff;
     --ai-gray: #262629;
-    --text: #ffffff;
+    --nav-bg: rgba(0, 0, 0, 0.9);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Roboto, sans-serif; }
-body { background: #000 !important; color: var(--text) !important; overflow: hidden; }
+/* [БАЗОВЫЙ СБРОС] */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif; 
+}
 
-/* ФИКС ТЕКСТА И ВВОДА (Прощай, 2003-й) */
-input { 
-    all: unset !important; 
-    flex: 1 !important; 
-    padding: 12px !important; 
+body { 
+    background: #000 !important; 
     color: #fff !important; 
-    font-size: 14px !important; 
-    background: transparent !important;
+    height: 100vh; 
+    overflow: hidden; 
 }
-input::placeholder { color: rgba(255,255,255,0.4) !important; }
 
-/* ВОЗВРАЩАЕМ ЭЛИТНУЮ СЕРУЮ РАМКУ ВВОДА */
+/* [ВЕРХНЯЯ НАВИГАЦИЯ] */
+.top-nav {
+    position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+    background: var(--nav-bg); backdrop-filter: blur(15px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+    z-index: 5000;
+}
+.logo { 
+    color: var(--accent); font-weight: 900; letter-spacing: 3px; font-size: 18px; 
+    text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+}
+.nav-links a {
+    color: #888; text-decoration: none; font-size: 12px; font-weight: bold;
+    margin-left: 30px; transition: 0.3s; letter-spacing: 1px;
+}
+.nav-links a:hover, .nav-links a.active { 
+    color: var(--accent); text-shadow: 0 0 10px var(--accent); 
+}
+
+/* [ОСНОВНОЙ КОНТЕНТ] */
+.content { 
+    padding-top: 120px; 
+    text-align: center; 
+    animation: fadeInContent 1s ease;
+}
+.content h1 { font-size: 3rem; color: var(--accent); margin-bottom: 20px; text-shadow: 0 0 20px rgba(0,242,255,0.3); }
+.content p { color: #aaa; font-size: 1.1rem; }
+
+/* [ГЛАЗА ТИТАНА - ТРИГГЕР] */
+#ai-trigger {
+    position: fixed; bottom: 30px; right: 30px;
+    width: 100px; height: 55px; background: #000;
+    display: flex; align-items: center; justify-content: center;
+    gap: 20px; cursor: pointer; z-index: 10000;
+    border-radius: 30px; border: 2px solid var(--accent);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+#ai-trigger:hover { transform: scale(1.1); }
+.dot { color: #fff; font-size: 26px; text-shadow: 0 0 15px #fff; pointer-events: none; }
+
+/* [ОКНО ОРАКУЛА] */
+.card {
+    position: fixed; bottom: 100px; right: 30px;
+    width: 380px; height: 550px; background: var(--card-bg);
+    border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 35px;
+    display: flex; flex-direction: column; padding: 20px;
+    backdrop-filter: blur(40px); z-index: 9999;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.5s, transform 0.5s;
+    pointer-events: none; resize: both; overflow: hidden;
+    min-width: 300px; min-height: 400px;
+}
+.card.active { 
+    opacity: 1 !important; 
+    transform: translateY(0) !important; 
+    pointer-events: all !important; 
+    /* ПУЛЬСАЦИЯ ТИТАНА */
+    animation: breathingFrame 20s infinite ease-in-out;
+}
+
+/* [ШАПКА ЧАТА] */
+.top-bar { 
+    display: flex; align-items: center; padding-bottom: 15px; 
+    border-bottom: 1px solid rgba(255,255,255,0.05); cursor: grab; 
+}
+#chat-title { color: #fff; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-align: center; flex: 1; text-transform: uppercase; }
+.close-btn { color: rgba(255,255,255,0.3); font-size: 24px; cursor: pointer; border: none; background: none; transition: 0.3s; }
+.close-btn:hover { color: #ff4545; }
+
+/* [ОБЛАСТЬ ЧАТА] */
+#chat { 
+    flex: 1; overflow-y: auto; padding: 20px 5px; 
+    display: flex; flex-direction: column; gap: 12px; 
+}
+#chat::-webkit-scrollbar { width: 4px; }
+#chat::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+
+/* [ПУЗЫРИ СООБЩЕНИЙ] */
+.bubble { 
+    padding: 12px 16px; border-radius: 20px; font-size: 14px; 
+    max-width: 80%; line-height: 1.4; animation: bubbleIn 0.3s ease; 
+}
+.user { align-self: flex-end; background: var(--user-blue); color: #fff; border-bottom-right-radius: 4px; }
+.ai { align-self: flex-start; background: var(--ai-gray); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-bottom-left-radius: 4px; }
+
+/* [ПОЛЕ ВВОДА] */
 .input-area { 
     display: flex; gap: 10px; align-items: center; 
-    background: rgba(255,255,255,0.05) !important; 
-    padding: 5px 15px !important; 
-    border-radius: 25px !important; 
-    border: 1px solid rgba(255,255,255,0.1) !important; 
-    margin-top: 10px;
+    background: rgba(255,255,255,0.05); padding: 5px 15px; 
+    border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px;
 }
+input { all: unset !important; flex: 1; padding: 10px; color: #fff !important; font-size: 14px; }
+input::placeholder { color: rgba(255,255,255,0.3); }
 
-/* ФИКС ПУЗЫРЕЙ (iOS Дизайн) */
-.bubble { 
-    padding: 12px 18px !important; 
-    border-radius: 22px !important; 
-    font-size: 15px !important; 
-    line-height: 1.4 !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+.send-btn { 
+    background: var(--accent); width: 35px; height: 35px; border-radius: 50%; 
+    color: #000; font-weight: bold; display: flex; align-items: center; 
+    justify-content: center; cursor: pointer; transition: 0.2s;
 }
-.user { 
-    align-self: flex-end !important; 
-    background: var(--user-blue) !important; 
-    color: #fff !important; 
-    border-bottom-right-radius: 5px !important; 
-}
-.ai { 
-    align-self: flex-start !important; 
-    background: var(--ai-gray) !important; 
-    color: #fff !important; 
-    border-bottom-left-radius: 5px !important; 
-    border: 1px solid rgba(255,255,255,0.05) !important;
-}
+.send-btn:hover { transform: scale(1.1) rotate(-10deg); background: #fff; }
 
-/* ТАНЕЦ ТОЧЕК (Глаза Титана) */
-.dot { color: #fff !important; text-shadow: 0 0 15px var(--accent) !important; }
+/* [РЕЖИМЫ] */
+.modes-shelf { display: flex; gap: 8px; margin-top: 12px; }
+.mode-tag { 
+    flex: 1; text-align: center; padding: 8px; border-radius: 12px; 
+    font-size: 10px; font-weight: bold; background: #1c1c1e; 
+    color: #555; cursor: pointer; transition: 0.3s;
+}
+.mode-tag.active { background: var(--accent); color: #000; box-shadow: 0 0 15px var(--accent); }
 
-/* ВОССТАНОВЛЕНИЕ ПУЛЬСАЦИИ (Дыхание Титана) */
+/* [АНИМАЦИИ] */
 @keyframes breathingFrame {
     0%, 40%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 242, 255, 0.1); }
-    20% { transform: scale(1.05); box-shadow: 0 0 40px rgba(0, 242, 255, 0.4); border-color: var(--accent); }
+    20% { transform: scale(1.03); box-shadow: 0 0 50px rgba(0, 242, 255, 0.4); border-color: var(--accent); }
 }
-.card.active { animation: breathingFrame 15s infinite ease-in-out !important; }
+@keyframes bubbleIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInContent { from { opacity: 0; } to { opacity: 1; } }
