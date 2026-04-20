@@ -3,27 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>ORACLE PRESTIGE 2.0</title>
+    <title>ORACLE PRESTIGE 2.5</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="card" id="main-frame">
-        <div class="modes-bar">
-            <button class="mode-btn active" onclick="setMode('fast', this)">Быстрая</button>
-            <button class="mode-btn" onclick="setMode('ultra', this)">Думающая</button>
+        <div class="top-bar">
+            <button class="icon-btn" onclick="newChat()" title="Новый чат">+</button>
+            <div id="chat-title">Главный Штаб</div>
+            <div class="top-actions">
+                <button class="icon-btn" onclick="deleteChat()" title="Удалить">🗑️</button>
+            </div>
         </div>
 
-        <h2 id="ai-head">Привет. Как дела?</h2>
+        <h2 id="ai-head">О привет, Посейдон! Чем займемся?</h2>
 
         <div id="chat">
-            <div class="bubble ai">Я готов, Посейдон. Какой режим активируем?</div>
+            <div class="bubble ai">Система готова. Ожидаю указаний в Секторе 3.2...</div>
         </div>
 
-        <div class="input-area">
-            <button class="action-btn" onclick="takeSnapshot()">📸</button>
-            <input type="text" id="ai-q" placeholder="Сообщение..." onkeypress="handleEnter(event)">
-            <button class="send-btn" onclick="ask()">↑</button>
+        <div class="input-container">
+            <div class="input-area">
+                <button class="action-btn" onclick="takeSnapshot()">📸</button>
+                <input type="text" id="ai-q" placeholder="Сообщение..." onkeypress="handleEnter(event)">
+                <button class="send-btn" onclick="ask()">↑</button>
+            </div>
+            
+            <div class="modes-shelf">
+                <button class="mode-tag active" onclick="setMode('fast', this)">Быстрая</button>
+                <button class="mode-tag" onclick="setMode('ultra', this)">Думающая</button>
+                <button class="mode-tag" onclick="setMode('scan', this)">Анализ</button>
+            </div>
         </div>
     </div>
 
