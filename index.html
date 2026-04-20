@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ORACLE PRESTIGE 2.0</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="card" id="main-frame">
+        <div class="modes-bar">
+            <button class="mode-btn active" onclick="setMode('fast', this)">Быстрая</button>
+            <button class="mode-btn" onclick="setMode('ultra', this)">Думающая</button>
+        </div>
+
+        <h2 id="ai-head">Привет. Как дела?</h2>
+
+        <div id="chat">
+            <div class="bubble ai">Я готов, Посейдон. Какой режим активируем?</div>
+        </div>
+
+        <div class="input-area">
+            <button class="action-btn" onclick="takeSnapshot()">📸</button>
+            <input type="text" id="ai-q" placeholder="Сообщение..." onkeypress="handleEnter(event)">
+            <button class="send-btn" onclick="ask()">↑</button>
+        </div>
+    </div>
+
+    <script src="brain.js"></script>
+</body>
+</html>
