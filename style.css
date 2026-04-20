@@ -1,13 +1,13 @@
-/* [БАЗОВЫЕ НАСТРОЙКИ] Обнуление и шрифты */
 :root {
-    --accent: #00f2ff; /* Основной неоновый цвет */
-    --card-bg: rgba(10, 10, 12, 0.98); /* Фон окна */
+    --accent: #00f2ff;
+    --card-bg: rgba(10, 10, 12, 0.98);
+    --text-color: #ffffff; /* ПРИНУДИТЕЛЬНО БЕЛЫЙ ТЕКСТ */
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", sans-serif; }
-body { background: #000; height: 100vh; overflow: hidden; }
+body { background: #000; height: 100vh; overflow: hidden; color: var(--text-color); }
 
-/* [ДИЗАЙН ИКОНКИ] Две точки с бесконечной анимацией */
+/* [ТРИГГЕР] Точки летят строго по горизонтали */
 #ai-trigger {
     position: fixed; bottom: 30px; right: 30px;
     width: 100px; height: 55px; background: #000;
@@ -15,42 +15,39 @@ body { background: #000; height: 100vh; overflow: hidden; }
     gap: 20px; cursor: pointer; z-index: 10000;
     border-radius: 30px; border: 2px solid var(--accent);
 }
-
 .dot { color: #fff; font-size: 26px; text-shadow: 0 0 15px #fff; }
-
-/* АНИМАЦИЯ: Точки летят строго по горизонтали (X) друг на друга */
 #ai-trigger:hover .left-dot { animation: crossRight 1.5s infinite ease-in-out; }
 #ai-trigger:hover .right-dot { animation: crossLeft 1.5s infinite ease-in-out; }
+@keyframes crossRight { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(45px); } }
+@keyframes crossLeft { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-45px); } }
 
-@keyframes crossRight {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(45px); }
-}
-@keyframes crossLeft {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(-45px); }
-}
-
-/* [ДИЗАЙН ОКНА] Плавное появление и размытие */
+/* [ОКНО] С выцветанием */
 .card {
     position: fixed; bottom: 100px; right: 30px;
     width: 380px; height: 550px; background: var(--card-bg);
     border: 1px solid rgba(0, 242, 255, 0.3); border-radius: 35px;
     display: flex; flex-direction: column; padding: 25px;
     backdrop-filter: blur(40px); z-index: 9999;
-    opacity: 0; transform: translateY(20px); /* Скрыто по умолчанию */
+    opacity: 0; transform: translateY(20px);
     transition: 0.5s ease; pointer-events: none;
 }
 .card.active { opacity: 1; transform: translateY(0); pointer-events: all; }
 
-/* Убираем стандартные "квадратные" стили кнопок браузера */
+/* [ШАПКА] Для перемещения */
+.top-bar { display: flex; align-items: center; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: move; }
+#chat-title { color: #fff; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-align: center; flex: 1; }
+
+/* [ВВОД] Фикс "Командуй" из 2003-го года */
+.input-area { display: flex; gap: 10px; margin-top: 10px; align-items: center; }
+input { 
+    flex: 1; background: rgba(255,255,255,0.03); 
+    border: 1px solid #333; border-radius: 20px; 
+    padding: 12px; color: #fff; outline: none; 
+    font-size: 14px; /* Размер шрифта, как на image_5.png, но стиль наш */
+}
+input::placeholder { color: rgba(255,255,255,0.5); } /* Стильный плейсхолдер */
+
+/* Убиваем белые кирпичи-квадраты */
 button { all: unset; cursor: pointer; transition: 0.3s; }
 
-/* Стилизация кнопок режимов */
-.mode-tag {
-    flex: 1; text-align: center; padding: 10px; border-radius: 15px;
-    font-size: 11px; font-weight: bold; background: #1c1c1e; color: #555;
-}
-.mode-tag.active { background: var(--accent); color: #000; box-shadow: 0 0 15px var(--accent); }
-
-/* ... (остальные стили пузырей чата и ввода остаются как раньше) ... */
+.send-btn { background: var(--accent); border-radius: 50%; width: 42px; height: 42px; color: #000; text-align: center; font-size: 20px; font-weight: bold;}
