@@ -1,43 +1,43 @@
-const URL = "https://script.google.com/macros/s/AKfycbyp1JFtNyqiy2-O4MSn0ZIowgGLURTg7MXefYuV2ev1YKRr4nv6yUNGuPd55Km9gFDy4g/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyp1JFtNyqiy2-O4MSn0ZIowgGLURTg7MXefYuV2ev1YKRr4nv6yUNGuPd55Km9gFDy4g/exec";
 
-// 1. ПЕРЕКЛЮЧАТЕЛЬ ОКНА
+// АВТОРИЗАЦИЯ И ИНТРИГА
+window.onload = () => {
+    let user = prompt("Введи имя Титана для доступа к Штабу:");
+    if (user) {
+        document.getElementById('welcome-msg').innerHTML = 
+        `Привет, <b>${user}</b>! Рад твоему возвращению. Восстанавливаю твои чаты из Клеток... <br><br><b>Чем займемся?</b>`;
+        // Здесь можно добавить fetch для загрузки старых сообщений
+    }
+};
+
 function toggleOracle() {
-    const win = document.getElementById('oracle-window');
-    win.style.display = (win.style.display === 'none') ? 'flex' : 'none';
+    document.getElementById('oracle-window').classList.toggle('active');
 }
-
-// 2. ENTER И ОТПРАВКА
-document.getElementById('ai-q').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') ask();
-});
 
 async function ask() {
     const input = document.getElementById('ai-q');
     const text = input.value.trim();
     if (!text) return;
 
-    document.getElementById('chat').innerHTML += `<div class="bubble user">${text}</div>`;
+    const chat = document.getElementById('chat');
+    chat.innerHTML += `<div class="bubble user">${text}</div>`;
     input.value = "";
+    chat.scrollTop = chat.scrollHeight;
 
-    // В ТАБЛИЦУ
-    fetch(URL, { method: 'POST', body: JSON.stringify({type:"CHAT", message:text}) })
-    .catch(e => console.log("Клетки ждут..."));
+    // НОВЫЙ МАКРОС САНИ
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify({ type: "CHAT", userId: "Sasha_Admin", message: text })
+    });
 
     setTimeout(() => {
-        document.getElementById('chat').innerHTML += `<div class="bubble ai">Принято. Навигация подтверждена.</div>`;
-    }, 600);
+        chat.innerHTML += `<div class="bubble ai">Данные приняты. Клетки обновлены. Что дальше?</div>`;
+        chat.scrollTop = chat.scrollHeight;
+    }, 800);
 }
 
-// 3. ПЕРЕМЕЩЕНИЕ
-const card = document.getElementById('oracle-window');
-const handle = document.getElementById('drag-handle');
-let move = false, ox, oy;
-
-handle.onmousedown = (e) => {
-    move = true; ox = e.clientX - card.offsetLeft; oy = e.clientY - card.offsetTop;
-};
-document.onmousemove = (e) => {
-    if (!move) return;
-    card.style.left = (e.clientX - ox) + 'px'; card.style.top = (e.clientY - oy) + 'px';
-};
-document.onmouseup = () => move = false;
+function setMode(mode, el) {
+    document.querySelectorAll('.mode-tag').forEach(m => m.classList.remove('active'));
+    el.classList.add('active');
+}
