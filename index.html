@@ -3,32 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>ORACLE PRESTIGE 2.6</title>
-    
+    <title>ORACLE PRESTIGE 2.8</title>
     <link rel="stylesheet" href="style.css">
-    
 </head>
 <body>
 
     <div class="card" id="main-frame">
-        <div class="top-bar">
-            <button class="icon-btn" onclick="location.reload()" title="Обновить">🔄</button>
+        <div class="top-bar" id="drag-handle">
+            <button class="icon-btn" onclick="location.reload()">🔄</button>
             <div id="chat-title">Штаб Посейдона</div>
             <div class="top-actions">
-                <button class="icon-btn" onclick="alert('Чат очищен!')" title="Удалить">🗑️</button>
+                <button class="icon-btn" onclick="document.getElementById('chat').innerHTML=''">🗑️</button>
             </div>
         </div>
 
         <h2 id="ai-head">О привет, Посейдон!</h2>
 
         <div id="chat">
-            <div class="bubble ai">Связь с ЛМСХ-Клетками установлена. Неон прогрет на 100%. Жду приказа!</div>
+            <div class="bubble ai">Система 2.8 онлайн. Окно мобильно, Клетки активны. Жду ввода...</div>
         </div>
 
         <div class="input-container">
             <div class="input-area">
-                <button class="action-btn" onclick="takeSnapshot()">📸</button>
-                <input type="text" id="ai-q" placeholder="Сообщение..." onkeypress="if(event.key==='Enter')ask()">
+                <button class="action-btn" onclick="takeSnapshot()">📷</button>
+                <input type="text" id="ai-q" placeholder="Сообщение..." autocomplete="off">
                 <button class="send-btn" onclick="ask()">↑</button>
             </div>
             
