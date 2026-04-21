@@ -4,96 +4,77 @@
 }
 
 body {
-    background: #050505;
-    color: white;
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    overflow: hidden;
-    height: 100vh;
+    background: #050505; color: white; margin: 0;
+    font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh;
 }
 
 .main-bg {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: radial-gradient(circle at top right, #1a1a2e, #050505);
-    z-index: -1;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at top right, #1a1a2e, #050505); z-index: -1;
 }
 
 /* НАВИГАЦИЯ */
 .top-nav {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 20px 40px; background: rgba(0,0,0,0.3);
-    backdrop-filter: blur(10px); border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    padding: 10px 40px; background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(15px); border-bottom: 0.5px solid rgba(255,255,255,0.1);
 }
 
-.site-name { font-weight: 600; letter-spacing: 2px; font-size: 1.2rem; }
-.nav-ai-btn {
-    background: var(--glass); border: 0.5px solid rgba(255,255,255,0.2);
-    color: white; padding: 8px 16px; border-radius: 12px;
-    cursor: pointer; transition: 0.3s; margin-right: 15px;
+.site-name { font-weight: 600; letter-spacing: 2px; }
+
+/* ИКОНКА-ТРИГГЕР (YouTube Style) */
+.ai-trigger-container {
+    display: flex; flex-direction: column; align-items: center;
+    cursor: pointer; transition: 0.3s; margin-right: 25px; padding: 5px;
 }
-.nav-ai-btn:hover { background: rgba(255,255,255,0.15); }
+
+.ai-icon-mini { position: relative; width: 30px; height: 15px; margin-bottom: 4px; }
+.dot { position: absolute; width: 12px; height: 12px; border-radius: 50%; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+.d1 { background: #007aff; left: 0; box-shadow: 0 0 10px rgba(0,122,255,0.6); }
+.d2 { background: #5856d6; right: 0; box-shadow: 0 0 10px rgba(88,86,214,0.6); }
+
+.ai-trigger-container:hover .d1 { transform: translateX(18px); }
+.ai-trigger-container:hover .d2 { transform: translateX(-18px); }
+
+.ai-hint {
+    font-size: 0.6rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1px; color: rgba(255,255,255,0);
+    transition: 0.4s; transform: translateY(5px);
+}
+
+.ai-trigger-container:hover .ai-hint { color: rgba(255,255,255,0.7); transform: translateY(0); }
 .nav-link { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.9rem; }
 
-/* ПЛАВАЮЩИЙ ВИДЖЕТ */
+/* ПЛАВАЮЩЕЕ ОКНО */
 #ai-interface {
-    position: fixed;
-    bottom: 30px; right: 30px;
+    position: fixed; bottom: 30px; right: 30px;
     width: 380px; height: 500px;
-    background: var(--glass);
-    backdrop-filter: blur(30px) saturate(150%);
-    -webkit-backdrop-filter: blur(30px) saturate(150%);
-    border: 0.5px solid rgba(255,255,255,0.2);
-    border-radius: 24px;
-    display: flex; flex-direction: column;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-    z-index: 9999;
-    overflow: hidden;
-    resize: both; /* МАСШТАБИРОВАНИЕ ВКЛЮЧЕНО */
+    background: var(--glass); backdrop-filter: blur(35px);
+    border: 0.5px solid rgba(255,255,255,0.2); border-radius: 24px;
+    display: flex; flex-direction: column; z-index: 9999;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    resize: both; overflow: hidden;
     min-width: 300px; min-height: 400px;
-    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* СКРЫТИЕ */
-.ai-hidden {
-    opacity: 0 !important;
-    transform: scale(0.8) translateY(50px) !important;
-    pointer-events: none !important;
-}
+.ai-hidden { opacity: 0 !important; transform: scale(0.9) translateY(40px) !important; pointer-events: none !important; }
 
-/* ЗАГОЛОВОК (ПЕРЕМЕЩЕНИЕ) */
+/* ШАПКА ВИДЖЕТА */
 .ai-header {
-    padding: 15px 20px;
-    display: flex; align-items: center; gap: 12px;
-    background: rgba(255,255,255,0.03);
-    border-bottom: 0.5px solid rgba(255,255,255,0.1);
-    cursor: grab; /* ТАЩИ ЗА МЕНЯ */
-    user-select: none;
+    padding: 15px; display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.05); cursor: grab; user-select: none;
 }
 .ai-header:active { cursor: grabbing; }
 
-.ai-logo-container { position: relative; width: 40px; height: 20px; }
-.circle { position: absolute; width: 20px; height: 20px; border-radius: 50%; transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-.c1 { background: #007aff; left: 0; box-shadow: 0 0 15px rgba(0,122,255,0.5); }
-.c2 { background: #5856d6; right: 0; box-shadow: 0 0 15px rgba(88,86,214,0.5); }
+.circle { position: absolute; width: 18px; height: 18px; border-radius: 50%; transition: 0.6s; }
+.c1 { background: #007aff; left: 0; }
+.c2 { background: #5856d6; right: 20px; }
 
-/* АНИМАЦИЯ ПРИ НАВЕДЕНИИ */
-#ai-interface:hover .c1 { transform: translateX(20px); }
-#ai-interface:hover .c2 { transform: translateX(-20px); }
+#chat-history { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+.msg { padding: 10px 14px; border-radius: 15px; font-size: 0.85rem; max-width: 80%; }
+.ai { background: rgba(255,255,255,0.1); align-self: flex-start; }
+.user { background: var(--accent); align-self: flex-end; }
 
-.header-title { font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
-.minimize-btn { margin-left: auto; cursor: pointer; opacity: 0.6; font-size: 1.5rem; line-height: 0; }
-
-/* ЧАТ */
-#chat-history { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-.msg { padding: 12px 16px; border-radius: 18px; font-size: 0.9rem; max-width: 80%; line-height: 1.4; }
-.ai { background: rgba(255,255,255,0.1); align-self: flex-start; border-bottom-left-radius: 4px; }
-.user { background: var(--accent); align-self: flex-end; border-bottom-right-radius: 4px; }
-
-/* ВВОД */
-.input-area { padding: 15px 20px; display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.2); }
-.attach-btn { font-size: 1.3rem; cursor: pointer; opacity: 0.5; transition: 0.3s; }
-.attach-btn:hover { opacity: 1; }
-#user-input { flex: 1; background: none; border: none; color: white; outline: none; font-size: 0.95rem; }
-#send-btn { background: white; color: black; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-weight: bold; }
+.input-area { padding: 12px; display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.2); }
+#user-input { flex: 1; background: none; border: none; color: white; outline: none; }
+#send-btn { background: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; }
