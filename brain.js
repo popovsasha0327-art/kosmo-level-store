@@ -1,45 +1,16 @@
-// ПРОВЕРКА ПАМЯТИ ПРИ ЗАГРУЗКЕ
-document.addEventListener('DOMContentLoaded', () => {
-    const chatContainer = document.getElementById('chat-history');
-    const savedChat = sessionStorage.getItem('prestige_chat');
+// НОВАЯ СВЯЗЬ С БАЗОЙ ТИТАНОВ
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxKenIhLwA01J2Wr2SG6BSc9wDx4FDz1uCxom9KXMBh7ghg5S2UYjCso3dC-mxe75z79A/exec"; // Саня, вставь сюда верный URL!
 
-    if (savedChat) {
-        chatContainer.innerHTML = savedChat;
-        console.log("ОТК Мурзик: Чат успешно восстановлен из памяти!");
+async function fetchBrainData() {
+    try {
+        const response = await fetch(GOOGLE_SHEET_URL);
+        if (!response.ok) throw new Error('Связь с Таблицей разорвана!');
+        const data = await response.json();
+        console.log("ОТК Мурзик: Данные из Таблицы получены!");
+        return data;
+    } catch (error) {
+        console.error("КРИТИЧЕСКАЯ ОШИБКА:", error);
+        // Резервный режим, если ссылка всё равно подведёт
+        return { status: "offline", message: "Работаем на локальных нейронах" };
     }
-});
-
-// ФУНКЦИЯ ОТПРАВКИ СООБЩЕНИЯ
-function sendMessage() {
-    const input = document.getElementById('user-input');
-    const chatContainer = document.getElementById('chat-history');
-    
-    if (input.value.trim() === "") return;
-
-    // Добавляем сообщение пользователя
-    const userMsg = `<div class="msg user">${input.value}</div>`;
-    chatContainer.innerHTML += userMsg;
-
-    // Имитация "раздумий" ИИ (Brain Power)
-    const thinkingMsg = `<div class="msg ai thinking">Ламирка печатает...</div>`;
-    chatContainer.innerHTML += thinkingMsg;
-
-    const currentText = input.value;
-    input.value = ""; // Очищаем поле
-
-    setTimeout(() => {
-        // Убираем анимацию раздумий
-        const thinking = document.querySelector('.thinking');
-        if (thinking) thinking.remove();
-
-        // Ответ ИИ (здесь можно подключить реальное API)
-        const aiMsg = `<div class="msg ai">Саня, как Главный Тестировщик, ты должен знать: код работает идеально!</div>`;
-        chatContainer.innerHTML += aiMsg;
-
-        // СОХРАНЯЕМ ЧАТ В СЕССИЮ (до перезагрузки)
-        sessionStorage.setItem('prestige_chat', chatContainer.innerHTML);
-        
-        // Авто-скролл вниз
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    }, 1500);
 }
