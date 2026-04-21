@@ -3,48 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LMLSH | Главная</title>
+    <title>LMLSH | Oracle Floating</title>
     <link rel="stylesheet" href="main-prestige.css">
     <link rel="stylesheet" href="oracle-boarding.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="app-shell">
-        <nav class="top-nav">
-            <div class="nav-left"><span class="site-name">LMLSH</span></div>
-            <div class="nav-right">
-                <ul class="desktop-menu">
-                    <li class="active"><a href="index.html">Главная</a></li>
-                    <li><a href="about.html">О нас</a></li>
-                </ul>
-                <div class="profile-icon"><img src="https://via.placeholder.com/35" alt="П"></div>
-            </div>
-        </nav>
 
-        <main id="main-content">
-            <div id="ai-interface">
-                <div id="chat-history">
-                    <div class="msg ai">Система готова. Жду твоих указаний, Титан.</div>
-                </div>
-                <div class="input-area">
-                    <input type="text" id="user-input" placeholder="Спроси Оракула...">
-                    <button onclick="sendMessage()">⬆</button>
-                </div>
-            </div>
-        </main>
+    <div class="main-bg"></div>
 
-        <div id="cookie-popup" class="ios-sheet">
-            <p>Разрешить Cookies для связи с Оракулом?</p>
-            <div class="sheet-buttons">
-                <button onclick="acceptCookies()">Разрешить</button>
-                <button onclick="triggerMammoth()">Отклонить</button>
+    <div id="ai-interface">
+        <div class="ai-header">
+            <div class="ai-logo-container">
+                <div class="circle c1"></div>
+                <div class="circle c2"></div>
             </div>
+            <span>LMLSH ORACLE</span>
+        </div>
+
+        <div id="chat-history">
+            <div class="msg ai">Система активирована. Enter включен. Жду файлы или вопросы, Саня.</div>
+        </div>
+
+        <div class="input-area">
+            <label for="file-input" class="attach-btn">📎</label>
+            <input type="file" id="file-input" style="display:none">
+            
+            <input type="text" id="user-input" placeholder="Напиши что-нибудь..." autocomplete="off">
+            <button id="send-btn">⬆</button>
+        </div>
+    </div>
+
+    <div id="cookie-popup" class="ios-sheet">
+        <p>Разрешить использование Cookies?</p>
+        <div class="sheet-buttons">
+            <button onclick="acceptCookies()">Разрешить</button>
+            <button onclick="triggerMammoth()">Отклонить</button>
         </div>
     </div>
 
     <div id="lock-screen" class="hidden">
         <div class="blur-overlay"></div>
-        <div class="mammoth-content"></div>
     </div>
 
     <script src="app-logic.js"></script>
