@@ -1,85 +1,76 @@
-const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbz_1aF9h73lQAS8YbkPf34WshD_9H1YLuKNey5PzVQT86IAret_gJdbY5OBc4KVsKvyKw/exec";
+const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbwTGRx7v4Ri2r_3xMYeN873BdldGY2Lh2u7LpvJX9NKGNjmOsJNOLh-G-n9DulkLJbjHg/exec";
 
-const input = document.getElementById('user-input');
-const btn = document.getElementById('send-btn');
-const history = document.getElementById('chat-history');
+// 1. ЗАГРУЗКА ЧАТА ПРИ СТАРТЕ
+window.onload = () => {
+    const history = JSON.parse(sessionStorage.getItem('lmlsh_chat')) || [];
+    const chatContainer = document.getElementById('chat-history');
+    if (history.length === 0) {
+        chatContainer.innerHTML = '<div class="msg ai">Система готова, Саня. О чем спросим Оракула?</div>';
+    } else {
+        history.forEach(msg => {
+            chatContainer.innerHTML += `<div class="msg ${msg.role}">${msg.text}</div>`;
+        });
+    }
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+};
 
-// 1. ОТПРАВКА ПО ENTER
-input.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage();
-});
-
-btn.addEventListener('click', sendMessage);
-
+// 2. ОТПРАВКА СООБЩЕНИЯ
 async function sendMessage() {
+    const input = document.getElementById('user-input');
     const text = input.value.trim();
     if (!text) return;
 
-    history.innerHTML += `<div class="msg user">${text}</div>`;
+    renderMsg('user', text);
+    saveChat('user', text);
     input.value = "";
-    history.scrollTop = history.scrollHeight;
 
     const thinkingId = "think-" + Date.now();
-    history.innerHTML += `<div class="msg ai" id="${thinkingId}">●●●</div>`;
+    renderMsg('ai', '●●●', thinkingId);
 
     try {
         const res = await fetch(GOOGLE_URL + "?q=" + encodeURIComponent(text));
         const data = await res.json();
         document.getElementById(thinkingId).innerText = data.answer;
+        saveChat('ai', data.answer);
     } catch {
-        document.getElementById(thinkingId).innerText = "Ошибка связи, Саня. Проверь сеть.";
-    }
-    history.scrollTop = history.scrollHeight;
-}
-
-// ЛОГИКА СКРЕПКИ
-document.getElementById('file-input').addEventListener('change', function() {
-    if (this.files[0]) {
-        history.innerHTML += `<div class="msg user">📎 Файл: ${this.files[0].name}</div>`;
-        history.scrollTop = history.scrollHeight;
+        document.getElementById(thinkingId).innerText = "Сбой связи.";
     }
 }
-// --- ЛОГИКА ПЕРЕМЕЩЕНИЯ (DRAG & DROP) ---
-const widget = document.getElementById('ai-interface');
-const header = document.querySelector('.ai-header');
 
-if (header && widget) {
-    let isDragging = false;
-    let startX, startY, initialX, initialY;
+function renderMsg(role, text, id = "") {
+    const chat = document.getElementById('chat-history');
+    chat.innerHTML += `<div class="msg ${role}" ${id ? `id="${id}"` : ''}>${text}</div>`;
+    chat.scrollTop = chat.scrollHeight;
+}
 
-    header.addEventListener('mousedown', (e) => {
-        // Тащим только за заголовок
-        isDragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        
-        // Получаем текущие координаты окна
-        const rect = widget.getBoundingClientRect();
-        initialX = rect.left;
-        initialY = rect.top;
-        
-        widget.style.transition = 'none'; // Отключаем анимацию во время движения
-        widget.style.cursor = 'grabbing';
-    });
+function saveChat(role, text) {
+    let history = JSON.parse(sessionStorage.getItem('lmlsh_chat')) || [];
+    history.push({ role, text });
+    sessionStorage.setItem('lmlsh_chat', JSON.stringify(history));
+}
 
-    document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        
-        // Устанавливаем новые координаты
-        widget.style.left = (initialX + dx) + 'px';
-        widget.style.top = (initialY + dy) + 'px';
-        widget.style.bottom = 'auto'; // Сбрасываем привязку к низу
-        widget.style.right = 'auto'; // Сбрасываем привязку к правому краю
-    });
+// 3. УПРАВЛЕНИЕ ОКНОМ (Drag & Drop)
+const ui = document.getElementById('ai-interface');
+const header = document.getElementById('drag-header');
+let isDragging = false, startX, startY, initX, initY;
 
-    document.addEventListener('mouseup', () => {
-        if (isDragging) {
-            isDragging = false;
-            widget.style.cursor = 'default';
-            widget.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-        }
-    });
-});
+header.onmousedown = (e) => {
+    isDragging = true;
+    startX = e.clientX; startY = e.clientY;
+    initX = ui.offsetLeft; initY = ui.offsetTop;
+    ui.style.transition = 'none';
+};
+
+document.onmousemove = (e) => {
+    if (!isDragging) return;
+    ui.style.left = (initX + e.clientX - startX) + 'px';
+    ui.style.top = (initY + e.clientY - startY) + 'px';
+    ui.style.bottom = 'auto'; ui.style.right = 'auto';
+};
+
+document.onmouseup = () => { isDragging = false; ui.style.transition = 'transform 0.3s ease, opacity 0.3s ease'; };
+
+function toggleAI() { ui.classList.toggle('ai-hidden'); }
+
+document.getElementById('user-input').onkeypress = (e) => { if(e.key === 'Enter') sendMessage(); };
+document.getElementById('send-btn').onclick = sendMessage;
