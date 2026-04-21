@@ -2,14 +2,11 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LMLSH | Ultra Oracle</title>
+    <title>LMLSH | Oracle</title>
     <link rel="stylesheet" href="main-prestige.css">
-    <link rel="stylesheet" href="oracle-boarding.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <div class="main-bg"></div>
 
     <nav class="top-nav">
@@ -35,32 +32,15 @@
             <span class="header-title">LMLSH ORACLE</span>
             <div class="minimize-btn" onclick="toggleAI()">−</div>
         </div>
-
-        <div id="chat-history">
-            </div>
-
+        <div id="chat-history"></div>
         <div class="input-area">
             <label for="file-input" class="attach-btn">📎</label>
             <input type="file" id="file-input" style="display:none">
-            
-            <input type="text" id="user-input" placeholder="Введите вопрос..." autocomplete="off">
+            <input type="text" id="user-input" placeholder="Напиши что-нибудь...">
             <button id="send-btn">⬆</button>
         </div>
     </div>
 
-    <div id="cookie-popup" class="ios-sheet">
-        <p>Разрешить Cookies для Титана?</p>
-        <div class="sheet-buttons">
-            <button onclick="acceptCookies()">Да</button>
-            <button onclick="triggerMammoth()">Нет</button>
-        </div>
-    </div>
-
-    <div id="lock-screen" class="hidden">
-        <div class="blur-overlay"></div>
-    </div>
-
-    <script src="app-logic.js"></script>
     <script src="brain.js"></script>
 </body>
 </html>
