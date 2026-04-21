@@ -1,46 +1,32 @@
-:root {
-    --bg-dark: #0a0a0c;
-    --ios-bg: rgba(255, 255, 255, 0.05);
-    --accent-blue: #007aff;
-    --text-main: #ffffff;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-
-body { background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; }
-
-/* НАВИГАЦИЯ */
-.top-nav {
-    position: fixed; top: 0; width: 100%; height: 60px;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 0 20px; background: var(--ios-bg);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 0.5px solid rgba(255, 255, 255, 0.1); z-index: 1000;
-}
-
-.site-name {
-    font-weight: 600; font-size: 1.2rem;
-    background: linear-gradient(90deg, #fff, #888);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-
-.nav-right { display: flex; align-items: center; gap: 20px; }
-.desktop-menu { display: flex; list-style: none; gap: 15px; }
-.desktop-menu a { color: rgba(255, 255, 255, 0.6); text-decoration: none; transition: 0.3s; }
-.desktop-menu li.active a { color: #fff; }
-
-/* ИНТЕРФЕЙС ЧАТА */
 #ai-interface {
-    margin-top: 80px; padding: 20px;
-    display: flex; flex-direction: column; height: calc(100vh - 100px);
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(25px) saturate(150%);
+    -webkit-backdrop-filter: blur(25px) saturate(150%);
+    border: 0.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    z-index: 9000; /* Чтобы быть поверх основного сайта */
+    overflow: hidden;
+    transition: transform 0.3s ease;
 }
 
-#chat-history { flex-grow: 1; overflow-y: auto; margin-bottom: 20px; }
-.msg { margin-bottom: 15px; padding: 12px; border-radius: 15px; max-width: 80%; }
-.ai { background: rgba(255,255,255,0.1); align-self: flex-start; }
-.user { background: var(--accent-blue); align-self: flex-end; margin-left: auto; }
-
-.input-area { display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 25px; }
-.input-area input { flex-grow: 1; background: none; border: none; color: #fff; padding: 5px 15px; outline: none; }
-.input-area button { background: var(--accent-blue); border: none; color: #fff; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; }
+/* Сделаем заголовок окна, за который "как бы" можно тянуть */
+#ai-interface::before {
+    content: "LMLSH ORACLE";
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 2px;
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+}
