@@ -1,76 +1,135 @@
+// 1. КОНСТАНТЫ И НАСТРОЙКИ
 const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbwTGRx7v4Ri2r_3xMYeN873BdldGY2Lh2u7LpvJX9NKGNjmOsJNOLh-G-n9DulkLJbjHg/exec";
 
-// 1. ЗАГРУЗКА ЧАТА ПРИ СТАРТЕ
-window.onload = () => {
-    const history = JSON.parse(sessionStorage.getItem('lmlsh_chat')) || [];
-    const chatContainer = document.getElementById('chat-history');
-    if (history.length === 0) {
-        chatContainer.innerHTML = '<div class="msg ai">Система готова, Саня. О чем спросим Оракула?</div>';
-    } else {
-        history.forEach(msg => {
-            chatContainer.innerHTML += `<div class="msg ${msg.role}">${msg.text}</div>`;
-        });
-    }
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-};
-
-// 2. ОТПРАВКА СООБЩЕНИЯ
-async function sendMessage() {
-    const input = document.getElementById('user-input');
-    const text = input.value.trim();
-    if (!text) return;
-
-    renderMsg('user', text);
-    saveChat('user', text);
-    input.value = "";
-
-    const thinkingId = "think-" + Date.now();
-    renderMsg('ai', '●●●', thinkingId);
-
-    try {
-        const res = await fetch(GOOGLE_URL + "?q=" + encodeURIComponent(text));
-        const data = await res.json();
-        document.getElementById(thinkingId).innerText = data.answer;
-        saveChat('ai', data.answer);
-    } catch {
-        document.getElementById(thinkingId).innerText = "Сбой связи.";
-    }
-}
-
-function renderMsg(role, text, id = "") {
-    const chat = document.getElementById('chat-history');
-    chat.innerHTML += `<div class="msg ${role}" ${id ? `id="${id}"` : ''}>${text}</div>`;
-    chat.scrollTop = chat.scrollHeight;
-}
-
-function saveChat(role, text) {
-    let history = JSON.parse(sessionStorage.getItem('lmlsh_chat')) || [];
-    history.push({ role, text });
-    sessionStorage.setItem('lmlsh_chat', JSON.stringify(history));
-}
-
-// 3. УПРАВЛЕНИЕ ОКНОМ (Drag & Drop)
+// Элементы интерфейса
 const ui = document.getElementById('ai-interface');
 const header = document.getElementById('drag-header');
-let isDragging = false, startX, startY, initX, initY;
+const chatHistory = document.getElementById('chat-history');
+const userInput = document.getElementById('user-input');
+const sendBtn = document.getElementById('send-btn');
+const fileInput = document.getElementById('file-input');
 
-header.onmousedown = (e) => {
-    isDragging = true;
-    startX = e.clientX; startY = e.clientY;
-    initX = ui.offsetLeft; initY = ui.offsetTop;
-    ui.style.transition = 'none';
-};
+// 2. ЗАГРУЗКА ИСТОРИИ ЧАТА (YouTube Studio Style)
+window.addEventListener('DOMContentLoaded', () => {
+    const savedChat = JSON.parse(sessionStorage.getItem('lmlsh_chat_history')) || [];
+    
+    if (savedChat.length === 0) {
+        // Приветствие по умолчанию, если чат пуст
+        renderMessage('ai', 'Система активирована. Я Оракул, твой персональный ИИ. О чем сегодня подумаем, Саня?');
+    } else {
+        // Восстанавливаем историю
+        savedChat.forEach(msg => renderMessage(msg.role, msg.text, null, false));
+    }
+});
 
-document.onmousemove = (e) => {
-    if (!isDragging) return;
-    ui.style.left = (initX + e.clientX - startX) + 'px';
-    ui.style.top = (initY + e.clientY - startY) + 'px';
-    ui.style.bottom = 'auto'; ui.style.right = 'auto';
-};
+// 3. ФУНКЦИЯ ОТПРАВКИ СООБЩЕНИЯ
+async function sendMessage() {
+    const text = userInput.value.trim();
+    if (!text) return;
 
-document.onmouseup = () => { isDragging = false; ui.style.transition = 'transform 0.3s ease, opacity 0.3s ease'; };
+    // Отображаем и сохраняем сообщение пользователя
+    renderMessage('user', text);
+    saveToHistory('user', text);
+    userInput.value = "";
 
-function toggleAI() { ui.classList.toggle('ai-hidden'); }
+    // Индикатор "Думаю..."
+    const thinkingId = "think-" + Date.now();
+    renderMessage('ai', '●●●', thinkingId);
 
-document.getElementById('user-input').onkeypress = (e) => { if(e.key === 'Enter') sendMessage(); };
-document.getElementById('send-btn').onclick = sendMessage;
+    try {
+        const response = await fetch(`${GOOGLE_URL}?q=${encodeURIComponent(text)}`);
+        const data = await response.json();
+        
+        // Заменяем точки на реальный ответ
+        const thinkingElem = document.getElementById(thinkingId);
+        if (thinkingElem) {
+            thinkingElem.innerText = data.answer;
+            saveToHistory('ai', data.answer);
+        }
+    } catch (error) {
+        const thinkingElem = document.getElementById(thinkingId);
+        if (thinkingElem) thinkingElem.innerText = "Ошибка связи с базой данных ЛМЛСХ.";
+        console.error("Ошибка Оракула:", error);
+    }
+}
+
+// 4. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ЧАТА
+function renderMessage(role, text, id = null, scroll = true) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `msg ${role}`;
+    if (id) msgDiv.id = id;
+    msgDiv.innerText = text;
+    chatHistory.appendChild(msgDiv);
+    
+    if (scroll) {
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+}
+
+function saveToHistory(role, text) {
+    const history = JSON.parse(sessionStorage.getItem('lmlsh_chat_history')) || [];
+    history.push({ role, text });
+    sessionStorage.setItem('lmlsh_chat_history', JSON.stringify(history));
+}
+
+// 5. УПРАВЛЕНИЕ ОКНОМ (Открытие/Закрытие)
+function toggleAI() {
+    if (ui) {
+        ui.classList.toggle('ai-hidden');
+    }
+}
+
+// 6. ПЕРЕМЕЩЕНИЕ ОКНА (Drag & Drop)
+if (header && ui) {
+    let isDragging = false;
+    let startX, startY, initialX, initialY;
+
+    header.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        const rect = ui.getBoundingClientRect();
+        initialX = rect.left;
+        initialY = rect.top;
+        
+        ui.style.transition = 'none'; // Мгновенная реакция
+        ui.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        
+        ui.style.left = (initialX + dx) + 'px';
+        ui.style.top = (initialY + dy) + 'px';
+        ui.style.bottom = 'auto'; 
+        ui.style.right = 'auto';
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+        ui.style.cursor = 'default';
+        ui.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+    });
+}
+
+// 7. СЛУШАТЕЛИ СОБЫТИЙ (Enter, Кнопки, Скрепка)
+if (userInput) {
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+}
+
+if (sendBtn) {
+    sendBtn.addEventListener('click', sendMessage);
+}
+
+if (fileInput) {
+    fileInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            renderMessage('user', `📎 Прикреплен файл: ${this.files[0].name}`);
+            saveToHistory('user', `📎 Прикреплен файл: ${this.files[0].name}`);
+        }
+    });
+}
