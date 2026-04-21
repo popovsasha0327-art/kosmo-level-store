@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LMLSH | Oracle Floating</title>
+    <title>LMLSH | Oracle System</title>
     <link rel="stylesheet" href="main-prestige.css">
     <link rel="stylesheet" href="oracle-boarding.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -12,17 +12,26 @@
 
     <div class="main-bg"></div>
 
+    <nav class="top-nav">
+        <div class="nav-left"><span class="site-name">LMLSH</span></div>
+        <div class="nav-right">
+            <button onclick="toggleAI()" class="nav-ai-btn">🔮 Оракул</button>
+            <a href="about.html" class="nav-link">О нас</a>
+        </div>
+    </nav>
+
     <div id="ai-interface">
         <div class="ai-header">
             <div class="ai-logo-container">
                 <div class="circle c1"></div>
                 <div class="circle c2"></div>
             </div>
-            <span>LMLSH ORACLE</span>
+            <span class="header-title">LMLSH ORACLE</span>
+            <div class="minimize-btn" onclick="toggleAI()">−</div>
         </div>
 
         <div id="chat-history">
-            <div class="msg ai">Система активирована. Enter включен. Жду файлы или вопросы, Саня.</div>
+            <div class="msg ai">Система готова, Саня. Окно можно таскать за заголовок и менять размер за уголок. Жду приказа!</div>
         </div>
 
         <div class="input-area">
@@ -35,10 +44,10 @@
     </div>
 
     <div id="cookie-popup" class="ios-sheet">
-        <p>Разрешить использование Cookies?</p>
+        <p>Разрешить Cookies для Титана?</p>
         <div class="sheet-buttons">
-            <button onclick="acceptCookies()">Разрешить</button>
-            <button onclick="triggerMammoth()">Отклонить</button>
+            <button onclick="acceptCookies()">Да</button>
+            <button onclick="triggerMammoth()">Нет</button>
         </div>
     </div>
 
