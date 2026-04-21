@@ -1,31 +1,41 @@
-// ГЕНЕРАЛЬНАЯ СВЯЗЬ С ТИТАНАМИ (АКТУАЛЬНАЯ ССЫЛКА)
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbz_1aF9h73lQAS8YbkPf34WshD_9H1YLuKNey5PzVQT86IAret_gJdbY5OBc4KVsKvyKw/exec";
+const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbz_1aF9h73lQAS8YbkPf34WshD_9H1YLuKNey5PzVQT86IAret_gJdbY5OBc4KVsKvyKw/exec";
 
-// Функция отправки (проверь, чтобы она выглядела так)
+const input = document.getElementById('user-input');
+const btn = document.getElementById('send-btn');
+const history = document.getElementById('chat-history');
+
+// 1. ОТПРАВКА ПО ENTER
+input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendMessage();
+});
+
+btn.addEventListener('click', sendMessage);
+
 async function sendMessage() {
-    const input = document.getElementById('user-input');
-    const chatContainer = document.getElementById('chat-history');
-    
-    if (!input || input.value.trim() === "") return;
+    const text = input.value.trim();
+    if (!text) return;
 
-    const userText = input.value;
-    chatContainer.innerHTML += `<div class="msg user">${userText}</div>`;
-    input.value = ""; 
+    history.innerHTML += `<div class="msg user">${text}</div>`;
+    input.value = "";
+    history.scrollTop = history.scrollHeight;
 
-    // Создаем облачко "мыслей" ИИ
     const thinkingId = "think-" + Date.now();
-    chatContainer.innerHTML += `<div class="msg ai" id="${thinkingId}">Оракул входит в транс...</div>`;
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    history.innerHTML += `<div class="msg ai" id="${thinkingId}">●●●</div>`;
 
     try {
-        // Отправляем запрос через прокси или напрямую (Гугл это любит)
-        const response = await fetch(GOOGLE_SHEET_URL + "?q=" + encodeURIComponent(userText));
-        const data = await response.json();
-        
+        const res = await fetch(GOOGLE_URL + "?q=" + encodeURIComponent(text));
+        const data = await res.json();
         document.getElementById(thinkingId).innerText = data.answer;
-    } catch (error) {
-        console.error("Ошибка:", error);
-        document.getElementById(thinkingId).innerText = "Саня, я слышу тебя, но база данных под блюром! Проверь интернет или консоль.";
+    } catch {
+        document.getElementById(thinkingId).innerText = "Ошибка связи, Саня. Проверь сеть.";
     }
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    history.scrollTop = history.scrollHeight;
 }
+
+// ЛОГИКА СКРЕПКИ
+document.getElementById('file-input').addEventListener('change', function() {
+    if (this.files[0]) {
+        history.innerHTML += `<div class="msg user">📎 Файл: ${this.files[0].name}</div>`;
+        history.scrollTop = history.scrollHeight;
+    }
+});
