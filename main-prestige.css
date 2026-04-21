@@ -1,32 +1,36 @@
+:root { --accent: #007aff; --glass: rgba(255, 255, 255, 0.08); }
+body { background: #050505; color: white; margin: 0; font-family: 'Inter', sans-serif; overflow: hidden; }
+.main-bg { position: fixed; width: 100vw; height: 100vh; background: radial-gradient(circle at top right, #1a1a2e, #050505); z-index: -1; }
+
+/* ВИДЖЕТ */
 #ai-interface {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 350px;
-    height: 500px;
-    background: rgba(255, 255, 255, 0.07);
-    backdrop-filter: blur(25px) saturate(150%);
-    -webkit-backdrop-filter: blur(25px) saturate(150%);
-    border: 0.5px solid rgba(255, 255, 255, 0.2);
-    border-radius: 25px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    z-index: 9000; /* Чтобы быть поверх основного сайта */
-    overflow: hidden;
-    transition: transform 0.3s ease;
+    position: fixed; bottom: 25px; right: 25px;
+    width: 380px; height: 550px;
+    background: var(--glass); backdrop-filter: blur(30px);
+    border: 0.5px solid rgba(255,255,255,0.15); border-radius: 28px;
+    display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    z-index: 9999; overflow: hidden;
 }
 
-/* Сделаем заголовок окна, за который "как бы" можно тянуть */
-#ai-interface::before {
-    content: "LMLSH ORACLE";
-    display: block;
-    width: 100%;
-    padding: 10px;
-    text-align: center;
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.4);
-    letter-spacing: 2px;
-    border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
-}
+/* ЛОГОТИП С ДВУМЯ КРУГАМИ */
+.ai-header { padding: 15px; display: flex; align-items: center; gap: 12px; border-bottom: 0.5px solid rgba(255,255,255,0.1); }
+.ai-logo-container { position: relative; width: 40px; height: 25px; }
+.circle { position: absolute; width: 20px; height: 20px; border-radius: 50%; opacity: 0.8; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+.c1 { background: #007aff; left: 0; }
+.c2 { background: #5856d6; right: 0; }
+
+/* АНИМАЦИЯ ПРИ НАВЕДЕНИИ */
+#ai-interface:hover .c1 { transform: translateX(20px); }
+#ai-interface:hover .c2 { transform: translateX(-20px); }
+
+#chat-history { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+.msg { padding: 10px 16px; border-radius: 18px; max-width: 85%; font-size: 0.9rem; line-height: 1.4; }
+.ai { background: rgba(255,255,255,0.1); align-self: flex-start; }
+.user { background: var(--accent); align-self: flex-end; }
+
+/* ЗОНА ВВОДА */
+.input-area { padding: 15px; display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.2); }
+.attach-btn { font-size: 1.4rem; cursor: pointer; opacity: 0.6; transition: 0.3s; }
+.attach-btn:hover { opacity: 1; transform: scale(1.1); }
+#user-input { flex: 1; background: none; border: none; color: white; outline: none; font-size: 0.95rem; }
+#send-btn { background: white; color: black; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-weight: bold; }
