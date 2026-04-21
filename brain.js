@@ -38,4 +38,48 @@ document.getElementById('file-input').addEventListener('change', function() {
         history.innerHTML += `<div class="msg user">📎 Файл: ${this.files[0].name}</div>`;
         history.scrollTop = history.scrollHeight;
     }
+}
+// --- ЛОГИКА ПЕРЕМЕЩЕНИЯ (DRAG & DROP) ---
+const widget = document.getElementById('ai-interface');
+const header = document.querySelector('.ai-header');
+
+if (header && widget) {
+    let isDragging = false;
+    let startX, startY, initialX, initialY;
+
+    header.addEventListener('mousedown', (e) => {
+        // Тащим только за заголовок
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        
+        // Получаем текущие координаты окна
+        const rect = widget.getBoundingClientRect();
+        initialX = rect.left;
+        initialY = rect.top;
+        
+        widget.style.transition = 'none'; // Отключаем анимацию во время движения
+        widget.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        
+        // Устанавливаем новые координаты
+        widget.style.left = (initialX + dx) + 'px';
+        widget.style.top = (initialY + dy) + 'px';
+        widget.style.bottom = 'auto'; // Сбрасываем привязку к низу
+        widget.style.right = 'auto'; // Сбрасываем привязку к правому краю
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            widget.style.cursor = 'default';
+            widget.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+        }
+    });
 });
