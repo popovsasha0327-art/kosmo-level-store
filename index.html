@@ -3,45 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LMLSH | Оракул Посейдона</title>
-    
-    <link rel="stylesheet" href="main-prestige.css"> <link rel="stylesheet" href="oracle-boarding.css"> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>LMLSH | Главная</title>
+    <link rel="stylesheet" href="main-prestige.css">
+    <link rel="stylesheet" href="oracle-boarding.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <div id="app-shell">
-        
         <nav class="top-nav">
-            <div class="nav-left">
-                <span class="site-name">LMLSH</span>
-            </div>
-            
-            <div class="mobile-menu-btn">
-                <span></span><span></span><span></span>
-            </div>
-
+            <div class="nav-left"><span class="site-name">LMLSH</span></div>
             <div class="nav-right">
                 <ul class="desktop-menu">
-                    <li class="active">Главная</li>
-                    <li>ИИ Чат</li>
-                    <li>Библиотека</li>
+                    <li class="active"><a href="index.html">Главная</a></li>
+                    <li><a href="about.html">О нас</a></li>
                 </ul>
-                <div class="profile-icon" onclick="toggleProfile()">
-                    <img src="default-avatar.png" alt="Профиль">
-                </div>
+                <div class="profile-icon"><img src="https://via.placeholder.com/35" alt="П"></div>
             </div>
         </nav>
 
         <main id="main-content">
-            </main>
+            <div id="ai-interface">
+                <div id="chat-history">
+                    <div class="msg ai">Система готова. Жду твоих указаний, Титан.</div>
+                </div>
+                <div class="input-area">
+                    <input type="text" id="user-input" placeholder="Спроси Оракула...">
+                    <button onclick="sendMessage()">⬆</button>
+                </div>
+            </div>
+        </main>
 
+        <div id="cookie-popup" class="ios-sheet">
+            <p>Разрешить Cookies для связи с Оракулом?</p>
+            <div class="sheet-buttons">
+                <button onclick="acceptCookies()">Разрешить</button>
+                <button onclick="triggerMammoth()">Отклонить</button>
+            </div>
+        </div>
     </div>
 
     <div id="lock-screen" class="hidden">
         <div class="blur-overlay"></div>
-        <div class="mammoth-card-container">
-            </div>
+        <div class="mammoth-content"></div>
     </div>
 
+    <script src="app-logic.js"></script>
+    <script src="brain.js"></script>
 </body>
 </html>
