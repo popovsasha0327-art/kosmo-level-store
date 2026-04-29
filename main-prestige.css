@@ -1,80 +1,53 @@
-:root {
-    --accent: #007aff;
-    --glass: rgba(255, 255, 255, 0.08);
+/* ... (сохраняем твои старые стили для навбара и точек) ... */
+
+/* НИЖНЯЯ ПАНЕЛЬ СИЛЫ */
+.oracle-bottom-bar {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    width: 400px; z-index: 5000;
 }
 
-body {
-    background: #050505; color: white; margin: 0;
-    font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh;
+#oracle-quick-input {
+    width: 100%; padding: 15px 25px; border-radius: 40px;
+    background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
+    border: 0.5px solid rgba(255,255,255,0.2); color: white;
+    font-family: 'Inter', sans-serif; transition: 0.4s; text-align: center;
 }
 
-.main-bg {
+#oracle-quick-input:hover { border-color: #007aff; box-shadow: 0 0 20px rgba(0,122,255,0.2); }
+
+/* СЦЕНА ОРАКУЛА */
+#oracle-scene {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(circle at top right, #1a1a2e, #050505); z-index: -1;
+    z-index: 10000; display: flex; align-items: center; justify-content: center;
+    transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* НАВИГАЦИЯ */
-.top-nav {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 40px; background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(15px); border-bottom: 0.5px solid rgba(255,255,255,0.1);
+.scene-hidden { opacity: 0; pointer-events: none; transform: scale(1.1); }
+
+.scene-overlay {
+    position: absolute; width: 100%; height: 100%;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #050505 100%);
 }
 
-.site-name { font-weight: 600; letter-spacing: 2px; }
-
-/* ИКОНКА-ТРИГГЕР (YouTube Style) */
-.ai-trigger-container {
-    display: flex; flex-direction: column; align-items: center;
-    cursor: pointer; transition: 0.3s; margin-right: 25px; padding: 5px;
+.scene-content {
+    position: relative; text-align: center; max-width: 800px; padding: 40px; z-index: 10001;
 }
 
-.ai-icon-mini { position: relative; width: 30px; height: 15px; margin-bottom: 4px; }
-.dot { position: absolute; width: 12px; height: 12px; border-radius: 50%; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-.d1 { background: #007aff; left: 0; box-shadow: 0 0 10px rgba(0,122,255,0.6); }
-.d2 { background: #5856d6; right: 0; box-shadow: 0 0 10px rgba(88,86,214,0.6); }
-
-.ai-trigger-container:hover .d1 { transform: translateX(18px); }
-.ai-trigger-container:hover .d2 { transform: translateX(-18px); }
-
-.ai-hint {
-    font-size: 0.6rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 1px; color: rgba(255,255,255,0);
-    transition: 0.4s; transform: translateY(5px);
+#scene-text {
+    font-size: 1.5rem; color: #007aff; letter-spacing: 5px; text-transform: uppercase;
+    margin-bottom: 20px; opacity: 0.6;
 }
 
-.ai-trigger-container:hover .ai-hint { color: rgba(255,255,255,0.7); transform: translateY(0); }
-.nav-link { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.9rem; }
-
-/* ПЛАВАЮЩЕЕ ОКНО */
-#ai-interface {
-    position: fixed; bottom: 30px; right: 30px;
-    width: 380px; height: 500px;
-    background: var(--glass); backdrop-filter: blur(35px);
-    border: 0.5px solid rgba(255,255,255,0.2); border-radius: 24px;
-    display: flex; flex-direction: column; z-index: 9999;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-    resize: both; overflow: hidden;
-    min-width: 300px; min-height: 400px;
+#scene-answer {
+    font-size: 2.5rem; line-height: 1.4; font-weight: 600;
+    background: linear-gradient(to bottom, #ffffff, #888);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 15px rgba(255,255,255,0.1));
 }
 
-.ai-hidden { opacity: 0 !important; transform: scale(0.9) translateY(40px) !important; pointer-events: none !important; }
-
-/* ШАПКА ВИДЖЕТА */
-.ai-header {
-    padding: 15px; display: flex; align-items: center; gap: 10px;
-    background: rgba(255,255,255,0.05); cursor: grab; user-select: none;
+.close-scene-btn {
+    margin-top: 50px; background: none; border: 1px solid rgba(255,255,255,0.2);
+    color: white; padding: 10px 30px; border-radius: 20px; cursor: pointer;
+    transition: 0.3s; opacity: 0.5;
 }
-.ai-header:active { cursor: grabbing; }
-
-.circle { position: absolute; width: 18px; height: 18px; border-radius: 50%; transition: 0.6s; }
-.c1 { background: #007aff; left: 0; }
-.c2 { background: #5856d6; right: 20px; }
-
-#chat-history { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-.msg { padding: 10px 14px; border-radius: 15px; font-size: 0.85rem; max-width: 80%; }
-.ai { background: rgba(255,255,255,0.1); align-self: flex-start; }
-.user { background: var(--accent); align-self: flex-end; }
-
-.input-area { padding: 12px; display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.2); }
-#user-input { flex: 1; background: none; border: none; color: white; outline: none; }
-#send-btn { background: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; }
+.close-scene-btn:hover { background: white; color: black; opacity: 1; }
