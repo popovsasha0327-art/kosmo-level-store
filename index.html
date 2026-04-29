@@ -11,9 +11,7 @@
     <div class="main-bg"></div>
 
     <nav class="top-nav">
-        <div class="nav-left">
-            <span class="site-name">LMLSH</span>
-        </div>
+        <div class="nav-left"><span class="site-name">LMLSH</span></div>
         <div class="nav-right">
             <div class="ai-trigger-container" onclick="toggleAI()">
                 <div class="ai-icon-mini">
@@ -24,7 +22,7 @@
             </div>
             <a href="index.html" class="nav-link active">Главная</a>
             <a href="about.html" class="nav-link">О нас</a>
-            </div>
+        </div>
     </nav>
 
     <div id="ai-interface" class="ai-hidden">
@@ -38,11 +36,23 @@
         </div>
         <div id="chat-history"></div>
         <div class="input-area">
-            <label for="file-input" class="attach-btn">📎</label>
-            <input type="file" id="file-input" style="display:none">
             <input type="text" id="user-input" placeholder="Введите вопрос..." autocomplete="off">
             <button id="send-btn">⬆</button>
         </div>
+    </div>
+
+    <div id="oracle-scene" class="scene-hidden">
+        <div class="scene-overlay"></div>
+        <div class="scene-content">
+            <div class="scene-loader" id="scene-loader"></div>
+            <h1 id="scene-text">Оракул слушает...</h1>
+            <p id="scene-answer"></p>
+            <button class="close-scene-btn" onclick="closeScene()">Вернуться в Штаб</button>
+        </div>
+    </div>
+
+    <div class="oracle-bottom-bar">
+        <input type="text" id="oracle-quick-input" placeholder="Спросить Оракула (Правая Кнопка Силы)..." oncontextmenu="handleRightClick(event)" autocomplete="off">
     </div>
 
     <script src="brain.js"></script>
