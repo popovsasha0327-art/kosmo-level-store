@@ -3,23 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LMLSH | Главный Штаб</title>
-    <link rel="stylesheet" href="main-prestige.css">
+    <title>LMSH | Главный Штаб</title>
+    <link rel="stylesheet" href="main-prestige.css?v=999">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Критические стили, чтобы страница не была "голой" ни секунды */
+        body, html { margin: 0; padding: 0; background: #050505; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .main-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at top right, #1a1a2e 0%, #050505 100%); z-index: -1; }
+        .top-nav { display: flex; justify-content: space-between; padding: 20px 40px; background: rgba(0,0,0,0.3); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 1000; border-bottom: 0.5px solid rgba(255,255,255,0.1); }
+        .nav-link { color: rgba(255,255,255,0.6); text-decoration: none; margin-left: 20px; transition: 0.3s; }
+        .nav-link.active { color: #007aff; font-weight: 600; }
+        .oracle-bottom-bar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; z-index: 5000; }
+        #oracle-quick-input { width: 100%; padding: 15px 25px; border-radius: 40px; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 0.5px solid rgba(255,255,255,0.2); color: white; text-align: center; outline: none; }
+    </style>
 </head>
 <body>
     <div class="main-bg"></div>
 
     <nav class="top-nav">
-        <div class="nav-left"><span class="site-name">LMLSH</span></div>
+        <div class="nav-left"><span style="font-weight: 600; letter-spacing: 2px;">LMLSH</span></div>
         <div class="nav-right">
-            <div class="ai-trigger-container" onclick="toggleAI()">
-                <div class="ai-icon-mini">
-                    <div class="dot d1"></div>
-                    <div class="dot d2"></div>
-                </div>
-                <span class="ai-hint">Спросить Оракула</span>
-            </div>
             <a href="index.html" class="nav-link active">Главная</a>
             <a href="about.html" class="nav-link">О нас</a>
         </div>
@@ -27,16 +30,12 @@
 
     <div id="ai-interface" class="ai-hidden">
         <div class="ai-header" id="drag-header">
-            <div class="ai-logo-container">
-                <div class="circle c1"></div>
-                <div class="circle c2"></div>
-            </div>
             <span class="header-title">LMLSH ORACLE</span>
             <div class="minimize-btn" onclick="toggleAI()">−</div>
         </div>
         <div id="chat-history"></div>
         <div class="input-area">
-            <input type="text" id="user-input" placeholder="Введите вопрос..." autocomplete="off">
+            <input type="text" id="user-input" placeholder="Спросить..." autocomplete="off">
             <button id="send-btn">⬆</button>
         </div>
     </div>
@@ -44,17 +43,16 @@
     <div id="oracle-scene" class="scene-hidden">
         <div class="scene-overlay"></div>
         <div class="scene-content">
-            <div class="scene-loader" id="scene-loader"></div>
-            <h1 id="scene-text">Оракул слушает...</h1>
+            <h1 id="scene-text">Оракул думает...</h1>
             <p id="scene-answer"></p>
-            <button class="close-scene-btn" onclick="closeScene()">Вернуться в Штаб</button>
+            <button class="close-scene-btn" onclick="closeScene()">ВЕРНУТЬСЯ В ШТАБ</button>
         </div>
     </div>
 
     <div class="oracle-bottom-bar">
-        <input type="text" id="oracle-quick-input" placeholder="Спросить Оракула (Правая Кнопка Силы)..." oncontextmenu="handleRightClick(event)" autocomplete="off">
+        <input type="text" id="oracle-quick-input" placeholder="Спросить Оракула (Правый Клик)" oncontextmenu="handleRightClick(event)">
     </div>
 
-    <script src="brain.js"></script>
+    <script src="brain.js?v=999"></script>
 </body>
 </html>
