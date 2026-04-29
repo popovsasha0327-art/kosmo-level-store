@@ -1,135 +1,53 @@
-// 1. КОНСТАНТЫ И НАСТРОЙКИ
 const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbwTGRx7v4Ri2r_3xMYeN873BdldGY2Lh2u7LpvJX9NKGNjmOsJNOLh-G-n9DulkLJbjHg/exec";
 
-// Элементы интерфейса
-const ui = document.getElementById('ai-interface');
-const header = document.getElementById('drag-header');
-const chatHistory = document.getElementById('chat-history');
-const userInput = document.getElementById('user-input');
-const sendBtn = document.getElementById('send-btn');
-const fileInput = document.getElementById('file-input');
+// 1. ПРАВАЯ КНОПКА СИЛЫ
+function handleRightClick(event) {
+    event.preventDefault(); // Отменяем меню браузера
+    const quickInput = document.getElementById('oracle-quick-input');
+    const text = quickInput.value.trim();
 
-// 2. ЗАГРУЗКА ИСТОРИИ ЧАТА (YouTube Studio Style)
-window.addEventListener('DOMContentLoaded', () => {
-    const savedChat = JSON.parse(sessionStorage.getItem('lmlsh_chat_history')) || [];
-    
-    if (savedChat.length === 0) {
-        // Приветствие по умолчанию, если чат пуст
-        renderMessage('ai', 'Система активирована. Я Оракул, твой персональный ИИ. О чем сегодня подумаем, Саня?');
+    if (text) {
+        openScene(text);
+        quickInput.value = ""; // Очищаем поле
     } else {
-        // Восстанавливаем историю
-        savedChat.forEach(msg => renderMessage(msg.role, msg.text, null, false));
+        alert("Сначала введи вопрос, Архитектор!");
     }
-});
+}
 
-// 3. ФУНКЦИЯ ОТПРАВКИ СООБЩЕНИЯ
-async function sendMessage() {
-    const text = userInput.value.trim();
-    if (!text) return;
+// 2. ОТКРЫТИЕ СЦЕНЫ И ЗАПРОС
+async function openScene(query) {
+    const scene = document.getElementById('oracle-scene');
+    const answerElem = document.getElementById('scene-answer');
+    const titleElem = document.getElementById('scene-text');
 
-    // Отображаем и сохраняем сообщение пользователя
-    renderMessage('user', text);
-    saveToHistory('user', text);
-    userInput.value = "";
-
-    // Индикатор "Думаю..."
-    const thinkingId = "think-" + Date.now();
-    renderMessage('ai', '●●●', thinkingId);
+    scene.classList.remove('scene-hidden');
+    titleElem.innerText = "Оракул обрабатывает вопрос...";
+    answerElem.innerText = "● ● ●";
 
     try {
-        const response = await fetch(`${GOOGLE_URL}?q=${encodeURIComponent(text)}`);
-        const data = await response.json();
+        const res = await fetch(`${GOOGLE_URL}?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
         
-        // Заменяем точки на реальный ответ
-        const thinkingElem = document.getElementById(thinkingId);
-        if (thinkingElem) {
-            thinkingElem.innerText = data.answer;
-            saveToHistory('ai', data.answer);
-        }
-    } catch (error) {
-        const thinkingElem = document.getElementById(thinkingId);
-        if (thinkingElem) thinkingElem.innerText = "Ошибка связи с базой данных ЛМЛСХ.";
-        console.error("Ошибка Оракула:", error);
+        titleElem.innerText = "Ответ Оракула:";
+        answerElem.innerText = data.answer;
+        
+        // Автоматически сохраняем и в обычную историю чата
+        saveToHistory('user', query);
+        saveToHistory('ai', data.answer);
+        
+    } catch (err) {
+        answerElem.innerText = "Связь со Сценой прервана.";
     }
 }
 
-// 4. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ЧАТА
-function renderMessage(role, text, id = null, scroll = true) {
-    const msgDiv = document.createElement('div');
-    msgDiv.className = `msg ${role}`;
-    if (id) msgDiv.id = id;
-    msgDiv.innerText = text;
-    chatHistory.appendChild(msgDiv);
-    
-    if (scroll) {
-        chatHistory.scrollTop = chatHistory.scrollHeight;
-    }
+function closeScene() {
+    document.getElementById('oracle-scene').classList.add('scene-hidden');
 }
 
-function saveToHistory(role, text) {
-    const history = JSON.parse(sessionStorage.getItem('lmlsh_chat_history')) || [];
-    history.push({ role, text });
-    sessionStorage.setItem('lmlsh_chat_history', JSON.stringify(history));
-}
-
-// 5. УПРАВЛЕНИЕ ОКНОМ (Открытие/Закрытие)
+// --- ОСТАЛЬНАЯ ЛОГИКА (Обычный чат) ---
 function toggleAI() {
-    if (ui) {
-        ui.classList.toggle('ai-hidden');
-    }
+    document.getElementById('ai-interface').classList.toggle('ai-hidden');
 }
 
-// 6. ПЕРЕМЕЩЕНИЕ ОКНА (Drag & Drop)
-if (header && ui) {
-    let isDragging = false;
-    let startX, startY, initialX, initialY;
-
-    header.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        const rect = ui.getBoundingClientRect();
-        initialX = rect.left;
-        initialY = rect.top;
-        
-        ui.style.transition = 'none'; // Мгновенная реакция
-        ui.style.cursor = 'grabbing';
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        
-        ui.style.left = (initialX + dx) + 'px';
-        ui.style.top = (initialY + dy) + 'px';
-        ui.style.bottom = 'auto'; 
-        ui.style.right = 'auto';
-    });
-
-    document.addEventListener('mouseup', () => {
-        isDragging = false;
-        ui.style.cursor = 'default';
-        ui.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-    });
-}
-
-// 7. СЛУШАТЕЛИ СОБЫТИЙ (Enter, Кнопки, Скрепка)
-if (userInput) {
-    userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
-    });
-}
-
-if (sendBtn) {
-    sendBtn.addEventListener('click', sendMessage);
-}
-
-if (fileInput) {
-    fileInput.addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-            renderMessage('user', `📎 Прикреплен файл: ${this.files[0].name}`);
-            saveToHistory('user', `📎 Прикреплен файл: ${this.files[0].name}`);
-        }
-    });
-}
+// (Тут твои старые функции sendMessage, saveToHistory, loadChat и Drag&Drop)
+// Обязательно оставь их, чтобы работал и обычный виджет!
