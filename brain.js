@@ -1,53 +1,45 @@
-const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbwTGRx7v4Ri2r_3xMYeN873BdldGY2Lh2u7LpvJX9NKGNjmOsJNOLh-G-n9DulkLJbjHg/exec";
+const chatBox = document.getElementById('chat-box');
+const oracleWindow = document.getElementById('oracle-window');
+const statusBar = document.getElementById('status-bar');
+const userInput = document.getElementById('user-input');
 
-// 1. ПРАВАЯ КНОПКА СИЛЫ
-function handleRightClick(event) {
-    event.preventDefault(); // Отменяем меню браузера
-    const quickInput = document.getElementById('oracle-quick-input');
-    const text = quickInput.value.trim();
+const brain = {
+    "дом.": "№77933 Lahr Reichenbach\nДом 3, Моцартстрассе\nК тебе я еду 🏠",
+    "скажи дом.": "№77933 Lahr Reichenbach\nДом 3, Моцартстрассе\nК тебе я еду 🏠",
+    "я буду приколы делать дома": "О спасибо. Я уже быстрее разогнался",
+    "сова": "Сова на связи. Чисто. 🦉",
+    "архив": "Бро, 📂 Архив активирован. Жду команд."
+};
 
-    if (text) {
-        openScene(text);
-        quickInput.value = ""; // Очищаем поле
-    } else {
-        alert("Сначала введи вопрос, Архитектор!");
-    }
+function sendToOracle() {
+    let val = userInput.value.trim();
+    if (!val) return;
+
+    // Активируем окно
+    oracleWindow.classList.add('active');
+    
+    // Твое сообщение
+    addMsg(val, 'user');
+    statusBar.innerText = `🚀 В Эпицентр: ${val}`;
+
+    // Ответ Оракула
+    setTimeout(() => {
+        let key = val.toLowerCase();
+        let reply = brain[key] || "Запрос принят. Обрабатываю в Эпицентре... 🚀";
+        addMsg(reply, 'oracle');
+    }, 600);
+
+    userInput.value = "";
 }
 
-// 2. ОТКРЫТИЕ СЦЕНЫ И ЗАПРОС
-async function openScene(query) {
-    const scene = document.getElementById('oracle-scene');
-    const answerElem = document.getElementById('scene-answer');
-    const titleElem = document.getElementById('scene-text');
-
-    scene.classList.remove('scene-hidden');
-    titleElem.innerText = "Оракул обрабатывает вопрос...";
-    answerElem.innerText = "● ● ●";
-
-    try {
-        const res = await fetch(`${GOOGLE_URL}?q=${encodeURIComponent(query)}`);
-        const data = await res.json();
-        
-        titleElem.innerText = "Ответ Оракула:";
-        answerElem.innerText = data.answer;
-        
-        // Автоматически сохраняем и в обычную историю чата
-        saveToHistory('user', query);
-        saveToHistory('ai', data.answer);
-        
-    } catch (err) {
-        answerElem.innerText = "Связь со Сценой прервана.";
-    }
+function addMsg(text, type) {
+    const d = document.createElement('div');
+    d.className = `msg ${type}`;
+    d.innerText = text;
+    chatBox.appendChild(d);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-function closeScene() {
-    document.getElementById('oracle-scene').classList.add('scene-hidden');
+function toggleOracle() {
+    oracleWindow.classList.toggle('active');
 }
-
-// --- ОСТАЛЬНАЯ ЛОГИКА (Обычный чат) ---
-function toggleAI() {
-    document.getElementById('ai-interface').classList.toggle('ai-hidden');
-}
-
-// (Тут твои старые функции sendMessage, saveToHistory, loadChat и Drag&Drop)
-// Обязательно оставь их, чтобы работал и обычный виджет!
