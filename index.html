@@ -1,28 +1,44 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>YouTube Lite</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <header class="topbar">
-    <div class="logo">YouTube Lite</div>
-    <form id="search-form">
-      <input id="search-input" type="text" placeholder="Поиск видео..." autocomplete="off">
-      <button type="submit">Найти</button>
-    </form>
-  </header>
+<body class="theme-dark">
+  <div id="app" class="layout layout-pc">
+    <header class="topbar">
+      <div class="logo">YouTube Lite</div>
+      <div class="device-label" id="deviceLabel">PC Edition</div>
+      <button id="themeToggle" class="btn">🌙 Тёмная</button>
+    </header>
 
-  <main>
-    <section id="player-section">
-      <iframe id="player" src="" frameborder="0" allowfullscreen></iframe>
-    </section>
+    <main class="main">
+      <section class="controls">
+        <input id="videoInput" class="input" type="text"
+               placeholder="Вставь ссылку на видео или ID…" />
+        <button id="playBtn" class="btn btn-primary">▶ Смотреть</button>
+      </section>
 
-    <section id="results"></section>
-  </main>
+      <section class="player-wrapper">
+        <div class="player-aspect">
+          <iframe id="playerFrame"
+                  src=""
+                  frameborder="0"
+                  allowfullscreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+          </iframe>
+        </div>
+      </section>
+
+      <section class="info">
+        <div id="modeInfo" class="info-box">
+          Режим: PC Edition · 480p Jacuzzi Mode
+        </div>
+      </section>
+    </main>
+  </div>
 
   <script src="app.js"></script>
 </body>
